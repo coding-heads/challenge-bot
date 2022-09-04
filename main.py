@@ -31,10 +31,12 @@ intents.message_content = True
 client = MyClient(intents=intents)
 
 def is_staff(ctx):
-    print(ctx)
-    if ctx.user.id in restricted_users:
+    print(ctx.user.id)
+    print(ctx.user.roles)
+    if str(ctx.user.id) in restricted_users:
         return False
-    if ctx.user.id in admins or ctx.user.id in mods:
+    if str(ctx.user.id) in admins or str(ctx.user.id) in mods:
+        print('hit')
         return True
     for x in ctx.user.roles:
         if x.id in admins or x.id in mods:
