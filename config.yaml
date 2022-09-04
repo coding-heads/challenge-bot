@@ -14,3 +14,12 @@ config:
     "hastebin",
     "privatebin"
   ]
+  whitelist_languages: [
+    "javascript",
+    "js",
+    "java",
+    "python",
+    "py",
+    "c++",
+    "cpp",
+  ]

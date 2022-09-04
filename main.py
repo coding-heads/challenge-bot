@@ -1,8 +1,7 @@
 import discord
 from discord import app_commands
 import os
-import re
-import tldextract
+from utils.utils import validateUrl
 from yaml_parser import admins, mods, restricted_users, whitelist_domains
 from dotenv import load_dotenv
 load_dotenv()
@@ -42,22 +41,24 @@ async def hello(interaction: discord.Interaction):
 async def submit(interaction: discord.Interaction, url: str, languages: str):
     """Submit you completed challenge!"""
     # verify url
-    if len(url.split()) > 1:
-        # Error
-        return
-    else:
-        x = re.search('^https://{1}\S*$', url)
-        if x:
-            ext = tldextract.extract(url)
-            if ext.domain not in whitelist_domains:
-                # Error
-                print('invalid url')
-            else:
-                print('valid url')
-                
+    # if len(url.split()) > 1:
+    #     # Error (invalid command)
+    #     return
+    # else:
+    #     x = re.search('^https://{1}\S*$', url)
+    #     if x:
+    #         ext = tldextract.extract(url)
+    #         if ext.domain not in whitelist_domains:
+    #             # Error (invalid url)
+    #             return
+    #         else:
+    #             print('valid url')
+    print(validateUrl(url))            
 
     langs = languages.split()
     # verify langs
+
+
     await interaction.response.send_message(f'{url} + {languages}')
 
 client.run(os.environ.get('bot-token'))
