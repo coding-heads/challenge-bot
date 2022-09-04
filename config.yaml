@@ -1,4 +1,11 @@
 ---
 config:
   prefix: "c!"
-  levels: "986696962457878588" # Administrator
+  administrator: [
+    "986696962457878588", # Administrator Role
+    "662292327477542913" # Thenlie  
+  ]
+  moderator: [
+    "986696511238836234" # Moderator Role
+  ]
+  restricted_users: []
