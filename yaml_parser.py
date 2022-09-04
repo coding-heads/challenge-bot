@@ -7,6 +7,7 @@ admins = []
 mods = []
 restricted_users = []
 whitelist_domains = []
+whitelist_languages = []
 
 keys = []
 for x in cfg['config']:
@@ -29,3 +30,6 @@ if ('restricted_users' in keys):
 
 if ('whitelist_domains' in keys):
     whitelist_domains = values[keys.index('whitelist_domains')]
+
+if ('whitelist_languages' in keys):
+    whitelist_languages = values[keys.index('whitelist_languages')]
