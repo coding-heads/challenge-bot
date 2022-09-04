@@ -14,6 +14,10 @@ class MyClient(discord.Client):
         self.tree = discord.app_commands.CommandTree(self)
         print(f'Logged on as {self.user}!')
 
+    async def on_command_error(self, ctx, error):
+        if hasattr(ctx.command, 'on_error'):
+            return
+
     async def setup_hook(self):
         # This copies the global commands over to your guild.
         self.tree.copy_global_to(guild=guild_id)
@@ -26,11 +30,28 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = MyClient(intents=intents)
 
-# https://github.com/Rapptz/discord.py/blob/master/examples/app_commands/basic.py
+def is_staff(ctx):
+    print(ctx)
+    if ctx.user.id in restricted_users:
+        return False
+    if ctx.user.id in admins or ctx.user.id in mods:
+        return True
+    for x in ctx.user.roles:
+        if x.id in admins or x.id in mods:
+            return True
+    return False
+
 @client.tree.command()
+@discord.app_commands.check(is_staff)
 async def hello(interaction: discord.Interaction):
     """Says hello!"""
     await interaction.response.send_message(f'Hi, {interaction.user.mention}')
+@hello.error
+async def hello_error(interaction: discord.Interaction, error):
+    print("doesnt work")
+    err = error_message('You do not have permission to use this command')
+    await interaction.response.send_message(embed=err)
+    return
 
 # --- SUBMIT COMMAND --- #
 @client.tree.command()
@@ -39,9 +60,17 @@ async def hello(interaction: discord.Interaction):
     languages='The list of languages you completed in this challenge',
 )
 async def submit(interaction: discord.Interaction, url: str, languages: str):
-    """Submit you completed challenge!"""
+    """Submit your completed challenge!"""
     langs = languages.split()
     
+    if len(whitelist_domains) == 0:
+        err = error_message('URLs are not set up! Please check your `config.yaml`.') 
+        await interaction.response.send_message(embed=err)
+        return
+    if len(whitelist_languages) == 0:
+        err = error_message('Languages are not set up! Please check your `config.yaml`.')
+        await interaction.response.send_message(embed=err)
+        return
     if not validateUrl(url):
         err = error_message('Invalid URL! Our currently supported URLs are: `' + ', '.join(whitelist_domains) + '`') 
         await interaction.response.send_message(embed=err)
