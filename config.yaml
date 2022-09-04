@@ -1,11 +1,11 @@
 ---
 config:
   prefix: "c!"
-  administrator: [
+  administrators: [
     "986696962457878588", # Administrator Role
     "662292327477542913" # Thenlie  
   ]
-  moderator: [
+  moderators: [
     "986696511238836234" # Moderator Role
   ]
   restricted_users: []

@@ -1,7 +1,10 @@
 import discord
 import os
+from yaml_parser import admins, mods, restricted_users
 from dotenv import load_dotenv
 load_dotenv()
+
+print(admins)
 
 class MyClient(discord.Client):
     async def on_ready(self):
