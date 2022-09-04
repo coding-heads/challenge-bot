@@ -4,8 +4,8 @@ import os
 from yaml_parser import admins, mods, restricted_users
 from dotenv import load_dotenv
 load_dotenv()
+
 guild_id = discord.Object(id=os.environ.get('guild-id'))
-print(admins)
 
 class MyClient(discord.Client):
     def __init__(self, *, intents: discord.Intents):
@@ -25,6 +25,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = MyClient(intents=intents)
 
+# https://github.com/Rapptz/discord.py/blob/master/examples/app_commands/basic.py
 @client.tree.command()
 async def hello(interaction: discord.Interaction):
     """Says hello!"""
