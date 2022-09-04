@@ -3,7 +3,7 @@ from discord import app_commands
 import os
 import re
 import tldextract
-from yaml_parser import admins, mods, restricted_users
+from yaml_parser import admins, mods, restricted_users, whitelist_domains
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -46,10 +46,15 @@ async def submit(interaction: discord.Interaction, url: str, languages: str):
         # Error
         return
     else:
-        x = re.search("^https://{1}\S*$", url)
+        x = re.search('^https://{1}\S*$', url)
         if x:
             ext = tldextract.extract(url)
-            print(ext.domain)
+            if ext.domain not in whitelist_domains:
+                # Error
+                print('invalid url')
+            else:
+                print('valid url')
+                
 
     langs = languages.split()
     # verify langs
