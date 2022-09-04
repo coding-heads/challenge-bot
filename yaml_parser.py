@@ -6,6 +6,7 @@ with open('config.yaml', 'r') as ymlfile:
 admins = []
 mods = []
 restricted_users = []
+domains = []
 
 keys = []
 for x in cfg['config']:
@@ -25,3 +26,6 @@ if ('moderators' in keys):
 
 if ('restricted_users' in keys):
     restricted_users = values[keys.index('restricted_users')]
+
+if ('domains' in keys):
+    domains = values[keys.index('domains')]

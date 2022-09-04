@@ -9,3 +9,8 @@ config:
     "986696511238836234" # Moderator Role
   ]
   restricted_users: []
+  domains: [
+    "github",
+    "hastebin",
+    "privatebin"
+  ]
