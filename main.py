@@ -1,8 +1,9 @@
 import discord
 from discord import app_commands
 import os
-from yaml_parser import admins, mods, restricted_users
-from utils.utils import validateUrl, validateLangs
+from utils.yaml_parser import admins, mods, restricted_users
+from utils.validate import validateUrl, validateLangs
+from utils.messages import error_message
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -41,8 +42,17 @@ async def hello(interaction: discord.Interaction):
 async def submit(interaction: discord.Interaction, url: str, languages: str):
     """Submit you completed challenge!"""
     langs = languages.split()
-    if validateUrl(url) and validateLangs(langs):
-        print("valid command")
+    
+    if not validateUrl(url):
+        err = error_message('Invalid URL') 
+        await interaction.response.send_message(embed=err)
+        return
+    if not validateLangs(langs):
+        err = error_message('Invalid Language(s)')
+        await interaction.response.send_message(embed=err)
+        return
+
+    print('valid command')
 
     await interaction.response.send_message(f'{url} + {languages}')
 

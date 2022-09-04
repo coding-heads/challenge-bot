@@ -1,4 +1,4 @@
-from yaml_parser import whitelist_domains, whitelist_languages
+from utils.yaml_parser import whitelist_domains, whitelist_languages
 import tldextract
 import re
 
