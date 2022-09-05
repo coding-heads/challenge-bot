@@ -12,7 +12,7 @@ class MyClient(discord.Client):
     def __init__(self, *, intents: discord.Intents):
         super().__init__(intents=intents)
         self.tree = discord.app_commands.CommandTree(self)
-        print(f'Logged on as {self.user}!')
+        print(self)
 
     async def on_command_error(self, ctx, error):
         if hasattr(ctx.command, 'on_error'):
@@ -22,6 +22,10 @@ class MyClient(discord.Client):
         # This copies the global commands over to your guild.
         self.tree.copy_global_to(guild=guild_id)
         await self.tree.sync(guild=guild_id)
+        print(f'Logged on as {self.user}!')
+
+    async def on_ready(self):
+        await self.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Challenge Submissions"))
 
     async def on_message(self, message):
         print(f'Message from {message.author}: {message.content}')
@@ -30,16 +34,13 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = MyClient(intents=intents)
 
-def is_staff(ctx):
-    print(ctx.user.id)
-    print(ctx.user.roles)
-    if str(ctx.user.id) in restricted_users:
+def is_staff(interaction: discord.Interaction):
+    if str(interaction.user.id) in restricted_users:
         return False
-    if str(ctx.user.id) in admins or str(ctx.user.id) in mods:
-        print('hit')
+    if str(interaction.user.id) in admins or str(interaction.user.id) in mods:
         return True
-    for x in ctx.user.roles:
-        if x.id in admins or x.id in mods:
+    for x in interaction.user.roles:
+        if str(x.id) in admins or str(x.id) in mods:
             return True
     return False
 
@@ -50,7 +51,6 @@ async def hello(interaction: discord.Interaction):
     await interaction.response.send_message(f'Hi, {interaction.user.mention}')
 @hello.error
 async def hello_error(interaction: discord.Interaction, error):
-    print("doesnt work")
     err = error_message('You do not have permission to use this command')
     await interaction.response.send_message(embed=err)
     return
