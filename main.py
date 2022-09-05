@@ -1,7 +1,7 @@
 import discord
 import os
 from utils.yaml_parser import admins, mods, restricted_users, whitelist_domains, whitelist_languages
-from utils.validate import validateUrl, validateLangs
+from utils.validate import validate_url, validate_langs, validate_staff
 from utils.messages import error_message
 from dotenv import load_dotenv
 load_dotenv()
@@ -34,18 +34,8 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = MyClient(intents=intents)
 
-def is_staff(interaction: discord.Interaction):
-    if str(interaction.user.id) in restricted_users:
-        return False
-    if str(interaction.user.id) in admins or str(interaction.user.id) in mods:
-        return True
-    for x in interaction.user.roles:
-        if str(x.id) in admins or str(x.id) in mods:
-            return True
-    return False
-
 @client.tree.command()
-@discord.app_commands.check(is_staff)
+@discord.app_commands.check(validate_staff)
 async def hello(interaction: discord.Interaction):
     """Says hello!"""
     await interaction.response.send_message(f'Hi, {interaction.user.mention}')

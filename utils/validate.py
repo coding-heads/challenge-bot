@@ -1,8 +1,9 @@
-from utils.yaml_parser import whitelist_domains, whitelist_languages
-import tldextract
+from utils.yaml_parser import whitelist_domains, whitelist_languages, admins, mods, restricted_users
+import discord
 import re
+import tldextract
 
-def validateUrl(url):
+def validate_url(url):
     if len(url.split()) > 1:
         # Error (invalid command)
         return False
@@ -14,7 +15,7 @@ def validateUrl(url):
             return False
         return True
 
-def validateLangs(langs):
+def validate_langs(langs):
     if len(langs) > len(whitelist_languages):
         # Error (invalid command)
         return False
@@ -24,3 +25,13 @@ def validateLangs(langs):
                 # Error (invalid lang)
                 return False
         return True
+
+def validate_staff(interaction: discord.Interaction):
+    if str(interaction.user.id) in restricted_users:
+        return False
+    if str(interaction.user.id) in admins or str(interaction.user.id) in mods:
+        return True
+    for x in interaction.user.roles:
+        if str(x.id) in admins or str(x.id) in mods:
+            return True
+    return False
